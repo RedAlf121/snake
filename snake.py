@@ -16,9 +16,7 @@ class Snake:
         It doesn't visualize the body
         Only updates all positions
         """
-        first = self._body.popleft()
-        self._body.appendleft(first)
-        self._body.appendleft(first+self._next_move(direction))
+        self._body.appendleft(self._body[0]+self._next_move(direction))
         self._body.pop()
     
     @property

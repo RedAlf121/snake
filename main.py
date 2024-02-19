@@ -1,5 +1,6 @@
 import pygame as pg
 import sys
+from food import Food
 from snake import Snake
 import numpy as np
 
@@ -11,10 +12,6 @@ map_keys = {
     pg.K_LEFT: (-1,0),
     pg.K_RIGHT:(1,0)
 }
-def draw_food():
-    """
-    """
-    pass
 
 def draw_screen(screen: pg.Surface,food: pg.Vector2, size=16):
     screen.fill((0,0,0))
@@ -33,6 +30,8 @@ def get_key():
             break
         if event.type == pg.KEYDOWN:
             key = map_keys.get(event.key,None)
+            if key is not None:
+                key = pg.Vector2(*key)
             break
     return game,key
 
@@ -45,13 +44,14 @@ def main_loop():
     clock = pg.time.Clock()
     game = True
     direction = RIGHT
-    food = pg.Vector2(23,23)
+    food = Food(screen.get_size(),size//2)
     while game is True:
-        draw_screen(screen,food)
+        draw_screen(screen,food.position)
         game,key = get_key()
-        direction = key if key is not None else direction
+        
+        direction = key if key is not None and key.dot(direction)!= -1 else direction
         if game is True:
-            snake.move(pg.Vector2(*direction))
+            snake.move(direction)
             draw_snake(screen,snake,size)
             #Check collisions
             #If collide with food
