@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
-from food import Food
-from snake import Snake
+from objects.food import Food
+from objects.snake import Snake
 import numpy as np
 
 #Define constants
@@ -35,6 +35,24 @@ def get_key():
             break
     return game,key
 
+def check_food_collision(snake: Snake,food: Food):
+    return pg.Rect(snake.head.x, snake.head.y, snake.size, snake.size).colliderect(pg.Rect(food.position.x,food.position.y,food.size,food.size))
+
+def check_out_bounds(snake: Snake, screen: pg.Surface):
+    pass
+
+def check_collide_itself(snake: Snake):
+    collide = False
+    for i in snake.drop_points():
+        print(i)
+        if i != snake.head and pg.Rect(snake.head.x, snake.head.y, snake.size, snake.size).colliderect(pg.Rect(i.x,i.y,snake.size,snake.size)):
+            collide = True
+            break
+    return collide
+
+def check_loose_collisions(snake: Snake, screen: pg.Surface):
+    return check_out_bounds(snake,screen) or check_collide_itself(snake)
+
 def main_loop():
     size = 32
     screen = pg.display.set_mode((800,600))
@@ -51,11 +69,17 @@ def main_loop():
         
         direction = key if key is not None and key.dot(direction)!= -1 else direction
         if game is True:
-            snake.move(direction)
+            snake.move_to(direction)
             draw_snake(screen,snake,size)
             #Check collisions
-            #If collide with food
             #If collide with itself or it's out of screen
+            if check_loose_collisions(snake,screen):
+                game = False
+                print("Game Over")
+            #If collide with food
+            elif check_food_collision(snake,food):
+                food.feed(snake)
+                food.update_position()
             pg.display.flip()
         clock.tick(5)#FPS
 
