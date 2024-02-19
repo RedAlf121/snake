@@ -21,6 +21,9 @@ class Snake:
         self._body.appendleft(first+self._next_move(direction))
         self._body.pop()
     
+    @property
+    def size(self):
+        return self._pixel_size
     
     def drop_points(self):
         """

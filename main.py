@@ -16,13 +16,13 @@ def draw_food():
     """
     pass
 
-def draw_screen(screen: pg.Surface):
+def draw_screen(screen: pg.Surface,food: pg.Vector2, size=16):
     screen.fill((0,0,0))
+    pg.draw.rect(screen,(255,0,0),pg.Rect(food.x,food.y,size,size))
 
 def draw_snake(screen,snake: Snake,size=32):
     for pixel in snake.drop_points():
         pg.draw.rect(screen,(255,255,255),pg.Rect(pixel.x,pixel.y,size,size))
-        
 
 def get_key():
     game = True
@@ -37,18 +37,22 @@ def get_key():
     return game,key
 
 def main_loop():
+    size = 32
     screen = pg.display.set_mode((800,600))
-    snake = Snake(pg.Vector2(23,23),LEFT)
+    
+    snake = Snake(pg.Vector2(*[i/2-size/2 for i in screen.get_size()]),LEFT,size)
+    
     clock = pg.time.Clock()
     game = True
     direction = RIGHT
+    food = pg.Vector2(23,23)
     while game is True:
-        draw_screen(screen)
+        draw_screen(screen,food)
         game,key = get_key()
         direction = key if key is not None else direction
         if game is True:
             snake.move(pg.Vector2(*direction))
-            draw_snake(screen,snake)
+            draw_snake(screen,snake,size)
             #Check collisions
             #If collide with food
             #If collide with itself or it's out of screen
