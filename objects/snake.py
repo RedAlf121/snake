@@ -57,6 +57,15 @@ class Snake:
     def add_points(self):
         self._puntuation+=1
     
+    def collide_itself(self):
+        collide = False
+        
+        for i in enumerate(self._body):
+            if i[0]>0 and pg.Rect(self.head.x, self.head.y, self.size, self.size).colliderect(pg.Rect(i[1].x,i[1].y,self.size,self.size)):
+                collide = True
+                break
+        
+        return collide
     
     def drop_points(self):
         """

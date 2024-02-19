@@ -41,17 +41,9 @@ def check_food_collision(snake: Snake,food: Food):
 def check_out_bounds(snake: Snake, screen: pg.Surface):
     pass
 
-def check_collide_itself(snake: Snake):
-    collide = False
-    for i in snake.drop_points():
-        print(i)
-        if i != snake.head and pg.Rect(snake.head.x, snake.head.y, snake.size, snake.size).colliderect(pg.Rect(i.x,i.y,snake.size,snake.size)):
-            collide = True
-            break
-    return collide
 
 def check_loose_collisions(snake: Snake, screen: pg.Surface):
-    return check_out_bounds(snake,screen) or check_collide_itself(snake)
+    return check_out_bounds(snake,screen) or snake.collide_itself()
 
 def main_loop():
     size = 32
